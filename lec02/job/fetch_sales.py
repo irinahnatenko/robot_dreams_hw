@@ -3,7 +3,7 @@ import requests
 import json
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(".env")
 AUTH_TOKEN = os.getenv("AUTH_TOKEN")
 API_URL = "https://fake-api-vycpfa6oca-uc.a.run.app/sales"
 
