@@ -16,7 +16,7 @@ def fetch_sales_data(page: str, date: str, raw_dir: str) -> None:
 
 response = requests.get(API_URL, params=params, headers=headers)
 if response.status_code == 200:
-    with open("C:/Users/User/robot_dreams_hw/lec02/sales_2022-08-09_1.json", "w", encoding="utf-8") as f:
+    with open("C:/Users/User/robot_dreams_hw/lec02/job/raw/sales/sales_2022-08-09_1.json", "w", encoding="utf-8") as f:
         json.dump(response.json(), f, indent=2, ensure_ascii=False)
     print("✅ Данные сохранены!")
 else:
