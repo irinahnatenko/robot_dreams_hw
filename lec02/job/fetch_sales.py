@@ -3,21 +3,25 @@ import requests
 import json
 from dotenv import load_dotenv
 
-def fetch_sales_data(page: str, date: str) -> None:
-    """
-    Fetch sales data from external API and save it locally.
-    """
-    url = "https://fake-api-vycpfa6oca-uc.a.run.app/sales"
-    response = requests.post(url, json={"date": date}, json={"page": page})
+load_dotenv()
+API_URL = "https://fake-api-vycpfa6oca-uc.a.run.app/sales"
 
-    if response.status_code != 200:
-        raise Exception(f"API request failed: {response.status_code}, {response.text}")
+def fetch_sales_data(page: str, date: str, raw_dir: str) -> None:
+    """Fetch sales data from API and save it."""
+    
+    try:
+        response = requests.post(API_URL, json={"date": date, "page": page})
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка API: {e}")
+        return None
 
     sales_data = response.json()
 
-    os.makedirs(page, exist_ok=True)
+    os.makedirs(raw_dir, exist_ok=True)
+    file_path = os.path.join(raw_dir, f"sales_{date}_{page}.json")
 
-    # Save to file
-    file_path = os.path.join(page, f"sales_{date}.json")
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(sales_data, f, indent=2, ensure_ascii=False)
+
+    print(f"Данные сохранены: {file_path}")
