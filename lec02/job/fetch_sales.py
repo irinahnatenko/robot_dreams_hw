@@ -13,12 +13,14 @@ def fetch_sales_data(page: str, date: str, raw_dir: str) -> None:
     headers = {"Authorization": f"Bearer {AUTH_TOKEN}"}
     params = {"date": date, "page": page}
 
-    try:
-        response = requests.get(API_URL, params=params, headers=headers)
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        print(f"Ошибка запроса к API: {e}")
-        return None
+
+response = requests.get(API_URL, params=params, headers=headers)
+if response.status_code == 200:
+    with open("C:/Users/User/robot_dreams_hw/lec02/sales_2022-08-09_1.json", "w", encoding="utf-8") as f:
+        json.dump(response.json(), f, indent=2, ensure_ascii=False)
+    print("✅ Данные сохранены!")
+else:
+    print(f"Ошибка API: {response.status_code}, {response.text}")
 
     sales_data = response.json()
 
