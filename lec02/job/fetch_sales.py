@@ -3,7 +3,6 @@ import requests
 import json
 from dotenv import load_dotenv
 
-# Загрузка токена из .env
 load_dotenv(".env")
 AUTH_TOKEN = os.getenv("AUTH_TOKEN")
 API_URL = "https://fake-api-vycpfa6oca-uc.a.run.app/sales"
@@ -23,7 +22,6 @@ def fetch_sales_data(page: str, date: str, raw_dir: str) -> None:
 
     sales_data = response.json()
 
-    # Создание папки, если она не существует
     os.makedirs(raw_dir, exist_ok=True)
 
     # Сохранение JSON-файла
