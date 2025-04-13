@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+from dotenv import load_dotenv
 
 def fetch_sales_data(raw_dir: str, date: str) -> None:
     """
