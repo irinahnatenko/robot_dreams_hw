@@ -4,16 +4,20 @@ import json
 from dotenv import load_dotenv
 
 load_dotenv()
+AUTH_TOKEN = os.getenv("AUTH_TOKEN")
 API_URL = "https://fake-api-vycpfa6oca-uc.a.run.app/sales"
 
 def fetch_sales_data(page: str, date: str, raw_dir: str) -> None:
-    """Fetch sales data from API and save it."""
-    
+    """Fetch sales data from API and save it locally."""
+
+    headers = {"Authorization": f"Bearer {AUTH_TOKEN}"}
+    params = {"date": date, "page": page}
+
     try:
-        response = requests.post(API_URL, json={"date": date, "page": page})
+        response = requests.get(API_URL, params=params, headers=headers)
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
-        print(f"Ошибка API: {e}")
+        print(f"Ошибка запроса к API: {e}")
         return None
 
     sales_data = response.json()
@@ -25,3 +29,4 @@ def fetch_sales_data(page: str, date: str, raw_dir: str) -> None:
         json.dump(sales_data, f, indent=2, ensure_ascii=False)
 
     print(f"Данные сохранены: {file_path}")
+
