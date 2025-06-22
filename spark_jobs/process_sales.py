@@ -3,12 +3,14 @@ from pyspark.sql.functions import col
 
 spark = SparkSession.builder.appName("ProcessSales").getOrCreate()
 
+base_path = "/home/jovyan/data"
+
 # RAW → BRONZE
-df_raw = spark.read.option("header", True).csv("data/raw/sales/*")
-df_raw.write.mode("overwrite").parquet("data/bronze/sales/")
+df_raw = spark.read.option("header", True).option("recursiveFileLookup", "true").csv(f"{base_path}/raw/sales/")
+df_raw.write.mode("overwrite").parquet(f"{base_path}/bronze/sales/")
 
 # BRONZE → SILVER 
-df_bronze = spark.read.parquet("data/bronze/sales/")
+df_bronze = spark.read.parquet(f"{base_path}/bronze/sales/")
 df_silver = df_bronze \
     .withColumn("price", col("Price").cast("double")) \
     .withColumn("purchase_date", col("PurchaseDate").cast("timestamp")) \
@@ -16,4 +18,4 @@ df_silver = df_bronze \
     .withColumnRenamed("Product", "product_name") \
     .select("client_id", "purchase_date", "product_name", "price")
 
-df_silver.write.mode("overwrite").partitionBy("purchase_date").parquet("data/silver/sales/")
+df_silver.write.mode("overwrite").parquet(f"{base_path}/silver/sales/")
