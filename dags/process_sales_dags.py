@@ -1,5 +1,5 @@
 from airflow import DAG
-from airflow.providers.docker.operators.docker import DockerOperator
+from airflow.operators.bash import BashOperator
 from datetime import datetime
 
 with DAG(
@@ -9,12 +9,7 @@ with DAG(
     catchup=False
 ) as dag:
 
-    run_spark_job = DockerOperator(
+    run_sales = BashOperator(
         task_id="run_process_sales",
-        image="spark-image:latest",
-        api_version='auto',
-        auto_remove=True,
-        command="spark-submit /home/jovyan/spark_jobs/process_sales.py",
-        docker_url="unix://var/run/docker.sock",
-        network_mode="bridge"
+        bash_command="docker exec final_work-spark-1 spark-submit /home/jovyan/spark_jobs/process_sales.py"
     )
