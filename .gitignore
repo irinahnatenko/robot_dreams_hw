@@ -1,0 +1,16 @@
+# PySpark temporary files
+*.crc
+_SUCCESS
+_TEMPORARY*
+
+# PyCharm / VSCode
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# Docker
+*.log
